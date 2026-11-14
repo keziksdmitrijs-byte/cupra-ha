@@ -1,0 +1,371 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect your Cupra",
+        "description": "Log in with your **CUPRA ID** (the same e-mail and password as in the My Cupra app).\n\nData comes from the official **VW Group EU Data Act** portal. Before the first data arrives, open https://eu-data-act.drivesomethinggreater.com, choose CUPRA, log in, pick your car and create a **continuous** data request (every 15 minutes). The first files can take from minutes up to 1–3 days.",
+        "data": {
+          "email": "E-mail (CUPRA ID)",
+          "password": "Password",
+          "use_ola": "Also use the My Cupra app connection (GPS and remote commands)",
+          "country": "Portal country code",
+          "language": "Portal language code"
+        },
+        "data_description": {
+          "use_ola": "Since June 2026 VW blocks most third-party access to this API. The integration tries it and switches commands off automatically if it is refused.",
+          "country": "Two letters, e.g. de. Change only if login fails with HTTP 503."
+        }
+      },
+      "vehicle": {
+        "title": "Choose the vehicle",
+        "data": {
+          "vin": "Vehicle"
+        }
+      },
+      "model": {
+        "title": "Model and powertrain",
+        "description": "The card layout and the car outline follow these settings for {vehicle}. Leave on automatic detection unless the card looks wrong.",
+        "data": {
+          "model": "Model",
+          "powertrain": "Powertrain"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-enter password",
+        "description": "CUPRA ID rejected the saved password for {email}.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong e-mail or password (or new terms need to be accepted in the My Cupra app).",
+      "cannot_connect": "The VW portal is not reachable right now. Try again later.",
+      "no_vehicles": "No vehicles are linked to this CUPRA ID."
+    },
+    "abort": {
+      "already_configured": "This vehicle is already configured.",
+      "reauth_successful": "Password updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Cupra options",
+        "data": {
+          "model": "Model",
+          "powertrain": "Powertrain",
+          "use_ola": "Also use the My Cupra app connection (GPS and remote commands)",
+          "spin": "S-PIN (needed for lock/unlock)",
+          "ola_interval": "My Cupra polling interval",
+          "appcheck_token": "App Check token (advanced)",
+          "country": "Portal country code",
+          "language": "Portal language code"
+        },
+        "data_description": {
+          "use_ola": "Since June 2026 VW blocks most third-party access to this API. The integration tries it and switches commands off automatically if it is refused.",
+          "appcheck_token": "Optional X-Firebase-AppCheck token taken from the My Cupra app. Expires after a while; leave empty if you don't know what this is.",
+          "country": "Two letters, e.g. de. Change only if login fails with HTTP 503."
+        }
+      }
+    }
+  },
+  "selector": {
+    "model": {
+      "options": {
+        "auto": "Detect automatically",
+        "born": "Born",
+        "tavascan": "Tavascan",
+        "raval": "Raval",
+        "terramar": "Terramar",
+        "formentor": "Formentor",
+        "leon": "Leon",
+        "leon_st": "Leon Sportstourer",
+        "ateca": "Ateca"
+      }
+    },
+    "powertrain": {
+      "options": {
+        "auto": "Detect automatically",
+        "ev": "Electric (EV)",
+        "phev": "Plug-in hybrid (PHEV)",
+        "ice": "Petrol / diesel"
+      }
+    },
+    "command": {
+      "options": {
+        "lock": "Lock",
+        "unlock": "Unlock",
+        "climate_on": "Start climate",
+        "climate_off": "Stop climate",
+        "charging_on": "Start charging",
+        "charging_off": "Stop charging",
+        "flash": "Flash",
+        "honk_flash": "Honk and flash",
+        "wakeup": "Wake up"
+      }
+    }
+  },
+  "issues": {
+    "no_subscription": {
+      "title": "{vehicle}: no EU Data Act data request",
+      "description": "The portal has no continuous data request for car …{vin}. Open https://eu-data-act.drivesomethinggreater.com, choose CUPRA, select the car and create a continuous request (15-minute interval). The integration picks it up automatically."
+    },
+    "ola_blocked": {
+      "title": "{vehicle}: My Cupra API blocked",
+      "description": "VW refused the My Cupra app API (HTTP 403, App Check). GPS position and remote commands are switched off; data from the EU Data Act keeps working. The integration retries every 6 hours."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "vehicle": {
+        "name": "Vehicle",
+        "state": {
+          "charging": "Charging",
+          "moving": "Driving",
+          "climatising": "Climatising",
+          "open": "Open",
+          "unlocked": "Unlocked",
+          "parked": "Parked",
+          "unknown": "Unknown"
+        }
+      },
+      "last_seen": {
+        "name": "Last data"
+      },
+      "soc": {
+        "name": "Battery"
+      },
+      "target_soc": {
+        "name": "Charge target"
+      },
+      "fuel_level": {
+        "name": "Fuel level"
+      },
+      "range_electric": {
+        "name": "Electric range"
+      },
+      "range_fuel": {
+        "name": "Fuel range"
+      },
+      "range_total": {
+        "name": "Total range"
+      },
+      "mileage": {
+        "name": "Odometer"
+      },
+      "charging_state": {
+        "name": "Charging state"
+      },
+      "charge_power": {
+        "name": "Charging power"
+      },
+      "charge_rate": {
+        "name": "Charging speed"
+      },
+      "charge_remaining_min": {
+        "name": "Charging time left"
+      },
+      "outside_temp": {
+        "name": "Outside temperature"
+      },
+      "climate_remaining_min": {
+        "name": "Climate time left"
+      },
+      "climate_target_temp": {
+        "name": "Climate target temperature"
+      },
+      "battery_12v": {
+        "name": "12V battery"
+      },
+      "inspection_days": {
+        "name": "Service in (days)"
+      },
+      "inspection_km": {
+        "name": "Service in (distance)"
+      },
+      "oil_days": {
+        "name": "Oil change in (days)"
+      },
+      "oil_km": {
+        "name": "Oil change in (distance)"
+      },
+      "oil_level": {
+        "name": "Oil level"
+      },
+      "tyre_fl": {
+        "name": "Tyre front left"
+      },
+      "tyre_fr": {
+        "name": "Tyre front right"
+      },
+      "tyre_rl": {
+        "name": "Tyre rear left"
+      },
+      "tyre_rr": {
+        "name": "Tyre rear right"
+      },
+      "trip_short_km": {
+        "name": "Trip distance"
+      },
+      "trip_short_fuel": {
+        "name": "Trip fuel consumption"
+      },
+      "trip_short_electric": {
+        "name": "Trip energy consumption"
+      },
+      "trip_long_km": {
+        "name": "Long-term distance"
+      },
+      "trip_long_fuel": {
+        "name": "Long-term fuel consumption"
+      },
+      "trip_long_electric": {
+        "name": "Long-term energy consumption"
+      },
+      "trip_long_speed": {
+        "name": "Long-term average speed"
+      }
+    },
+    "binary_sensor": {
+      "locked": {
+        "name": "Lock"
+      },
+      "doors_open": {
+        "name": "Doors"
+      },
+      "windows_open": {
+        "name": "Windows"
+      },
+      "door_fl": {
+        "name": "Door front left"
+      },
+      "door_fr": {
+        "name": "Door front right"
+      },
+      "door_rl": {
+        "name": "Door rear left"
+      },
+      "door_rr": {
+        "name": "Door rear right"
+      },
+      "trunk": {
+        "name": "Tailgate"
+      },
+      "hood": {
+        "name": "Bonnet"
+      },
+      "window_fl": {
+        "name": "Window front left"
+      },
+      "window_fr": {
+        "name": "Window front right"
+      },
+      "window_rl": {
+        "name": "Window rear left"
+      },
+      "window_rr": {
+        "name": "Window rear right"
+      },
+      "sunroof": {
+        "name": "Sunroof"
+      },
+      "charging": {
+        "name": "Charging"
+      },
+      "plug_connected": {
+        "name": "Charging cable"
+      },
+      "climate_on": {
+        "name": "Climate"
+      },
+      "parking_brake": {
+        "name": "Parking brake"
+      },
+      "parking_lights": {
+        "name": "Parking lights"
+      },
+      "moving": {
+        "name": "Moving"
+      },
+      "stale": {
+        "name": "Data outdated"
+      }
+    },
+    "device_tracker": {
+      "position": {
+        "name": "Position"
+      }
+    },
+    "lock": {
+      "door_lock": {
+        "name": "Central locking"
+      }
+    },
+    "switch": {
+      "climate": {
+        "name": "Climate control"
+      },
+      "charging_switch": {
+        "name": "Charging"
+      },
+      "window_heating": {
+        "name": "Window heating"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      },
+      "flash": {
+        "name": "Flash lights"
+      },
+      "honk_flash": {
+        "name": "Honk and flash"
+      },
+      "wakeup": {
+        "name": "Wake up car"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Refresh",
+      "description": "Fetch the latest data now.",
+      "fields": {
+        "device_id": {
+          "name": "Vehicle",
+          "description": "Leave empty for all Cupra vehicles."
+        }
+      }
+    },
+    "start_climate": {
+      "name": "Start climate",
+      "description": "Start remote climate control (My Cupra).",
+      "fields": {
+        "device_id": {
+          "name": "Vehicle",
+          "description": "Leave empty for all Cupra vehicles."
+        },
+        "temperature": {
+          "name": "Temperature",
+          "description": "Target cabin temperature."
+        }
+      }
+    },
+    "command": {
+      "name": "Send command",
+      "description": "Send a remote command via My Cupra.",
+      "fields": {
+        "device_id": {
+          "name": "Vehicle",
+          "description": "Leave empty for all Cupra vehicles."
+        },
+        "command": {
+          "name": "Command",
+          "description": "Command to send."
+        }
+      }
+    }
+  }
+}

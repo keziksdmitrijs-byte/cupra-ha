@@ -1,0 +1,156 @@
+{
+ "user_id": "u",
+ "vin": "VSSZZZKMTEST00001",
+ "Data": [
+  {
+   "key": "0140e2ae-3ca2-3991-a97b-ba07bf139bd7",
+   "dataFieldName": "car_captured_utc_timestamp",
+   "value": "2026-11-14T10:00:00Z"
+  },
+  {
+   "key": "ae0294b4-1286-3e98-a818-1485b8d88430",
+   "dataFieldName": "state_of_charge",
+   "value": "63"
+  },
+  {
+   "key": "1503760b-5570-3001-8ffc-1bb6f464948e",
+   "dataFieldName": "fuel_level_current_level",
+   "value": "41"
+  },
+  {
+   "key": "55e0d40b-38ed-3cb5-9dcd-6193df6fc493",
+   "dataFieldName": "cruising_range_primary_engine",
+   "value": "402"
+  },
+  {
+   "key": "3dedefab-8ded-3f5a-907f-d5e9970720bf",
+   "dataFieldName": "cruising_range_secondary_engine",
+   "value": "58"
+  },
+  {
+   "key": "153e8c40-4c6c-3c17-a11b-0ecc35d55b81",
+   "dataFieldName": "cruising_range_combined",
+   "value": "460"
+  },
+  {
+   "key": "41c0805c-43e5-313e-9dfb-356cb8d20f7c",
+   "dataFieldName": "mileage",
+   "value": "4294967295"
+  },
+  {
+   "key": "41c0805c-43e5-313e-9dfb-356cb8d20f7c",
+   "dataFieldName": "mileage",
+   "value": "12873"
+  },
+  {
+   "key": "ad12b2c9-2290-3147-bc72-f5adbf659d9b",
+   "dataFieldName": "locked",
+   "value": "true"
+  },
+  {
+   "key": "bc9bbc65-8461-30eb-88db-f94148552a20",
+   "dataFieldName": "open_state_front_left_door",
+   "value": "3"
+  },
+  {
+   "key": "0bb971a6-12ef-3382-9b99-5ed0a52f18e9",
+   "dataFieldName": "open_state_front_right_door",
+   "value": "3"
+  },
+  {
+   "key": "bf62dd10-b184-3425-a64c-c50b09420bc3",
+   "dataFieldName": "open_state_rear_left_door",
+   "value": "2"
+  },
+  {
+   "key": "60c81e02-4825-3aab-8da8-b8b07f251623",
+   "dataFieldName": "open_state_rear_right_door",
+   "value": "3"
+  },
+  {
+   "key": "dbb8f3b1-2bc9-3afc-a1d5-61f1eb04d1c4",
+   "dataFieldName": "open_state_tailgate",
+   "value": "3"
+  },
+  {
+   "key": "e1c6d420-b439-3de6-a5b7-d0b474cc2752",
+   "dataFieldName": "open_state_front_engine_bonnet",
+   "value": "0"
+  },
+  {
+   "key": "60a4f436-5534-32f4-b4cc-b5a88a9d4b91",
+   "dataFieldName": "state_front_left_door_window_lifter",
+   "value": "3"
+  },
+  {
+   "key": "3ef13c1d-7e08-3cf4-b501-a8bda80cff78",
+   "dataFieldName": "state_rear_right_door_window_lifter",
+   "value": "2"
+  },
+  {
+   "key": "6810b781-e54a-35e8-af98-fcdefb54bac6",
+   "dataFieldName": "outside_temperature",
+   "value": "2781"
+  },
+  {
+   "key": "c111830c-f959-30d2-859a-ea996190d864",
+   "dataFieldName": "plug_state",
+   "value": "connected"
+  },
+  {
+   "key": "9da735bb-c5d5-39f8-bf53-0fa2a367aa8f",
+   "dataFieldName": "charging_state",
+   "value": "charging"
+  },
+  {
+   "key": "978be4ed-2f7f-32c0-8644-18e7b0dde741",
+   "dataFieldName": "charging_power",
+   "value": "72"
+  },
+  {
+   "key": "cf28f7d9-6201-30b8-82e5-a461968d30dc",
+   "dataFieldName": "remaining_charging_time",
+   "value": "95"
+  },
+  {
+   "key": "fd600221-7965-3396-96d7-82a840a2831c",
+   "dataFieldName": "maintenance_interval__time_until_inspection",
+   "value": "210"
+  },
+  {
+   "key": "ac86e00b-7fa1-3a59-b481-aa7cfc49b0d9",
+   "dataFieldName": "maintenance_interval_distance_until_inspection",
+   "value": "17100"
+  },
+  {
+   "key": "42b1c47b-e1d1-375f-a76f-32ab0177f03e",
+   "dataFieldName": "maintenance_interval__time_until_oil_change",
+   "value": "120"
+  },
+  {
+   "key": "c4a26fd6-c08f-3921-bb8c-23fab6751c54",
+   "dataFieldName": "tyre_pressure_actual_front_left",
+   "value": "2.5"
+  },
+  {
+   "key": "be03dca4-16fb-3072-82bd-17064bd423b9",
+   "dataFieldName": "tyre_pressure_actual_front_right",
+   "value": "1"
+  },
+  {
+   "key": "c5b624db-6a07-3957-9127-98cee0be6c98",
+   "dataFieldName": "boardnetBatteryVoltageIndication",
+   "value": "12450"
+  },
+  {
+   "key": "df531c6f-8897-3236-a760-5975322e7021",
+   "dataFieldName": "long_term_data_average_fuel_consumption",
+   "value": "63"
+  },
+  {
+   "key": "1c62bf0a-8088-332c-9399-3b8cb0573099",
+   "dataFieldName": "remaining_climatisation_time",
+   "value": "0s"
+  }
+ ]
+}

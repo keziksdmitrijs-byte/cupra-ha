@@ -1,0 +1,371 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Подключение Cupra",
+        "description": "Войдите с **CUPRA ID** (те же e-mail и пароль, что в приложении My Cupra).\n\nДанные берутся с официального портала **VW Group EU Data Act**. Чтобы данные начали приходить, откройте https://eu-data-act.drivesomethinggreater.com, выберите CUPRA, войдите, выберите машину и создайте **непрерывный** запрос данных (каждые 15 минут). Первые файлы приходят от нескольких минут до 1–3 дней.",
+        "data": {
+          "email": "E-mail (CUPRA ID)",
+          "password": "Пароль",
+          "use_ola": "Также использовать подключение приложения My Cupra (GPS и команды)",
+          "country": "Код страны портала",
+          "language": "Код языка портала"
+        },
+        "data_description": {
+          "use_ola": "С июня 2026 VW блокирует сторонний доступ к этому API. Интеграция попробует подключиться и сама отключит команды, если доступ закрыт.",
+          "country": "Две буквы, например de. Меняйте, только если вход падает с HTTP 503."
+        }
+      },
+      "vehicle": {
+        "title": "Выберите автомобиль",
+        "data": {
+          "vin": "Автомобиль"
+        }
+      },
+      "model": {
+        "title": "Модель и тип привода",
+        "description": "Вид карточки и силуэт машины зависят от этих настроек для {vehicle}. Оставьте автоопределение, если карточка выглядит правильно.",
+        "data": {
+          "model": "Модель",
+          "powertrain": "Тип привода"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Введите пароль заново",
+        "description": "CUPRA ID не принял сохранённый пароль для {email}.",
+        "data": {
+          "password": "Пароль"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Неверный e-mail или пароль (или нужно принять новые условия в приложении My Cupra).",
+      "cannot_connect": "Портал VW сейчас недоступен. Попробуйте позже.",
+      "no_vehicles": "К этому CUPRA ID не привязано ни одного автомобиля."
+    },
+    "abort": {
+      "already_configured": "Этот автомобиль уже добавлен.",
+      "reauth_successful": "Пароль обновлён."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Настройки Cupra",
+        "data": {
+          "model": "Модель",
+          "powertrain": "Тип привода",
+          "use_ola": "Также использовать подключение приложения My Cupra (GPS и команды)",
+          "spin": "S-PIN (нужен для замка)",
+          "ola_interval": "Интервал опроса My Cupra",
+          "appcheck_token": "Токен App Check (для опытных)",
+          "country": "Код страны портала",
+          "language": "Код языка портала"
+        },
+        "data_description": {
+          "use_ola": "С июня 2026 VW блокирует сторонний доступ к этому API. Интеграция попробует подключиться и сама отключит команды, если доступ закрыт.",
+          "appcheck_token": "Необязательный токен X-Firebase-AppCheck из приложения My Cupra. Со временем истекает; оставьте пустым, если не знаете, что это.",
+          "country": "Две буквы, например de. Меняйте, только если вход падает с HTTP 503."
+        }
+      }
+    }
+  },
+  "selector": {
+    "model": {
+      "options": {
+        "auto": "Определить автоматически",
+        "born": "Born",
+        "tavascan": "Tavascan",
+        "raval": "Raval",
+        "terramar": "Terramar",
+        "formentor": "Formentor",
+        "leon": "Leon",
+        "leon_st": "Leon Sportstourer",
+        "ateca": "Ateca"
+      }
+    },
+    "powertrain": {
+      "options": {
+        "auto": "Определить автоматически",
+        "ev": "Электро (EV)",
+        "phev": "Подключаемый гибрид (PHEV)",
+        "ice": "Бензин / дизель"
+      }
+    },
+    "command": {
+      "options": {
+        "lock": "Закрыть",
+        "unlock": "Открыть",
+        "climate_on": "Включить климат",
+        "climate_off": "Выключить климат",
+        "charging_on": "Начать зарядку",
+        "charging_off": "Остановить зарядку",
+        "flash": "Мигнуть",
+        "honk_flash": "Сигнал и фары",
+        "wakeup": "Разбудить"
+      }
+    }
+  },
+  "issues": {
+    "no_subscription": {
+      "title": "{vehicle}: нет запроса данных EU Data Act",
+      "description": "На портале нет непрерывного запроса данных для машины …{vin}. Откройте https://eu-data-act.drivesomethinggreater.com, выберите CUPRA, машину и создайте непрерывный запрос (каждые 15 минут). Интеграция подхватит его сама."
+    },
+    "ola_blocked": {
+      "title": "{vehicle}: API My Cupra заблокирован",
+      "description": "VW отказал в доступе к API приложения My Cupra (HTTP 403, App Check). GPS и удалённые команды отключены, данные EU Data Act продолжают работать. Интеграция пробует снова каждые 6 часов."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "vehicle": {
+        "name": "Автомобиль",
+        "state": {
+          "charging": "Заряжается",
+          "moving": "В движении",
+          "climatising": "Работает климат",
+          "open": "Открыт",
+          "unlocked": "Не заперт",
+          "parked": "Припаркован",
+          "unknown": "Неизвестно"
+        }
+      },
+      "last_seen": {
+        "name": "Последние данные"
+      },
+      "soc": {
+        "name": "Батарея"
+      },
+      "target_soc": {
+        "name": "Цель зарядки"
+      },
+      "fuel_level": {
+        "name": "Уровень топлива"
+      },
+      "range_electric": {
+        "name": "Запас хода на электричестве"
+      },
+      "range_fuel": {
+        "name": "Запас хода на топливе"
+      },
+      "range_total": {
+        "name": "Общий запас хода"
+      },
+      "mileage": {
+        "name": "Пробег"
+      },
+      "charging_state": {
+        "name": "Состояние зарядки"
+      },
+      "charge_power": {
+        "name": "Мощность зарядки"
+      },
+      "charge_rate": {
+        "name": "Скорость зарядки"
+      },
+      "charge_remaining_min": {
+        "name": "До конца зарядки"
+      },
+      "outside_temp": {
+        "name": "Температура снаружи"
+      },
+      "climate_remaining_min": {
+        "name": "Осталось климата"
+      },
+      "climate_target_temp": {
+        "name": "Целевая температура климата"
+      },
+      "battery_12v": {
+        "name": "АКБ 12V"
+      },
+      "inspection_days": {
+        "name": "До ТО (дней)"
+      },
+      "inspection_km": {
+        "name": "До ТО (км)"
+      },
+      "oil_days": {
+        "name": "До замены масла (дней)"
+      },
+      "oil_km": {
+        "name": "До замены масла (км)"
+      },
+      "oil_level": {
+        "name": "Уровень масла"
+      },
+      "tyre_fl": {
+        "name": "Шина передняя левая"
+      },
+      "tyre_fr": {
+        "name": "Шина передняя правая"
+      },
+      "tyre_rl": {
+        "name": "Шина задняя левая"
+      },
+      "tyre_rr": {
+        "name": "Шина задняя правая"
+      },
+      "trip_short_km": {
+        "name": "Поездка: расстояние"
+      },
+      "trip_short_fuel": {
+        "name": "Поездка: расход топлива"
+      },
+      "trip_short_electric": {
+        "name": "Поездка: расход энергии"
+      },
+      "trip_long_km": {
+        "name": "Долгосрочно: расстояние"
+      },
+      "trip_long_fuel": {
+        "name": "Долгосрочно: расход топлива"
+      },
+      "trip_long_electric": {
+        "name": "Долгосрочно: расход энергии"
+      },
+      "trip_long_speed": {
+        "name": "Долгосрочно: средняя скорость"
+      }
+    },
+    "binary_sensor": {
+      "locked": {
+        "name": "Замок"
+      },
+      "doors_open": {
+        "name": "Двери"
+      },
+      "windows_open": {
+        "name": "Окна"
+      },
+      "door_fl": {
+        "name": "Дверь передняя левая"
+      },
+      "door_fr": {
+        "name": "Дверь передняя правая"
+      },
+      "door_rl": {
+        "name": "Дверь задняя левая"
+      },
+      "door_rr": {
+        "name": "Дверь задняя правая"
+      },
+      "trunk": {
+        "name": "Багажник"
+      },
+      "hood": {
+        "name": "Капот"
+      },
+      "window_fl": {
+        "name": "Окно переднее левое"
+      },
+      "window_fr": {
+        "name": "Окно переднее правое"
+      },
+      "window_rl": {
+        "name": "Окно заднее левое"
+      },
+      "window_rr": {
+        "name": "Окно заднее правое"
+      },
+      "sunroof": {
+        "name": "Люк"
+      },
+      "charging": {
+        "name": "Зарядка"
+      },
+      "plug_connected": {
+        "name": "Кабель зарядки"
+      },
+      "climate_on": {
+        "name": "Климат"
+      },
+      "parking_brake": {
+        "name": "Стояночный тормоз"
+      },
+      "parking_lights": {
+        "name": "Стояночные огни"
+      },
+      "moving": {
+        "name": "Движется"
+      },
+      "stale": {
+        "name": "Данные устарели"
+      }
+    },
+    "device_tracker": {
+      "position": {
+        "name": "Местоположение"
+      }
+    },
+    "lock": {
+      "door_lock": {
+        "name": "Центральный замок"
+      }
+    },
+    "switch": {
+      "climate": {
+        "name": "Климат-контроль"
+      },
+      "charging_switch": {
+        "name": "Зарядка"
+      },
+      "window_heating": {
+        "name": "Обогрев стёкол"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Обновить"
+      },
+      "flash": {
+        "name": "Мигнуть фарами"
+      },
+      "honk_flash": {
+        "name": "Сигнал и фары"
+      },
+      "wakeup": {
+        "name": "Разбудить авто"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Обновить",
+      "description": "Получить свежие данные сейчас.",
+      "fields": {
+        "device_id": {
+          "name": "Автомобиль",
+          "description": "Пусто — все автомобили Cupra."
+        }
+      }
+    },
+    "start_climate": {
+      "name": "Включить климат",
+      "description": "Запустить удалённый климат-контроль (My Cupra).",
+      "fields": {
+        "device_id": {
+          "name": "Автомобиль",
+          "description": "Пусто — все автомобили Cupra."
+        },
+        "temperature": {
+          "name": "Температура",
+          "description": "Целевая температура в салоне."
+        }
+      }
+    },
+    "command": {
+      "name": "Отправить команду",
+      "description": "Отправить удалённую команду через My Cupra.",
+      "fields": {
+        "device_id": {
+          "name": "Автомобиль",
+          "description": "Пусто — все автомобили Cupra."
+        },
+        "command": {
+          "name": "Команда",
+          "description": "Какую команду отправить."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+ "user_id": "u",
+ "vin": "VSSZZZK1TEST00002",
+ "Data": [
+  {
+   "key": "03ad2fc6-8caa-33b7-9992-9fb288f876c1",
+   "dataFieldName": "profile_state_report.car_captured_time",
+   "value": "2026-11-14T11:00:00.000+01:00"
+  },
+  {
+   "key": "506cb83e-f99f-3af3-bbeb-0429b69a78d9",
+   "dataFieldName": "battery_state_report.soc",
+   "value": "77.0"
+  },
+  {
+   "key": "x-range.value",
+   "dataFieldName": "range.value",
+   "value": "301"
+  },
+  {
+   "key": "30cc36fd-71ca-3c09-9296-e94ebd47bd2b",
+   "dataFieldName": "mileage.value",
+   "value": "5400"
+  },
+  {
+   "key": "0811aa96-26d8-3d5f-8bd7-77be06612d85",
+   "dataFieldName": "charging_state_report.current_charge_state",
+   "value": "NOT_READY_FOR_CHARGING"
+  },
+  {
+   "key": "c0bb1348-5d0d-3140-9a51-06881db06490",
+   "dataFieldName": "open",
+   "value": "False"
+  },
+  {
+   "key": "b6ea5ae8-53ff-386d-8415-1baa0602bbb6",
+   "dataFieldName": "outdoor_temperature",
+   "value": "8.5"
+  }
+ ]
+}

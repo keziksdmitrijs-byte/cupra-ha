@@ -1,0 +1,23 @@
+{
+  "domain": "cupra",
+  "name": "Cupra",
+  "after_dependencies": [
+    "frontend"
+  ],
+  "codeowners": [
+    "@keziksdmitrijs-byte"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
+  "documentation": "https://github.com/keziksdmitrijs-byte/cupra-ha",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/keziksdmitrijs-byte/cupra-ha/issues",
+  "loggers": [
+    "custom_components.cupra"
+  ],
+  "requirements": [],
+  "version": "0.1.0"
+}

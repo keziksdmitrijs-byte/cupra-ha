@@ -1,0 +1,44 @@
+refresh:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: cupra
+          multiple: true
+start_climate:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: cupra
+          multiple: true
+    temperature:
+      default: 21
+      selector:
+        number:
+          min: 16
+          max: 30
+          step: 0.5
+          unit_of_measurement: "°C"
+command:
+  fields:
+    device_id:
+      selector:
+        device:
+          integration: cupra
+          multiple: true
+    command:
+      required: true
+      selector:
+        select:
+          translation_key: command
+          options:
+            - lock
+            - unlock
+            - climate_on
+            - climate_off
+            - charging_on
+            - charging_off
+            - flash
+            - honk_flash
+            - wakeup
