@@ -45,7 +45,7 @@ CONF_POWERTRAIN = "powertrain"
 CONF_OLA_INTERVAL = "ola_interval"
 
 DEFAULT_COUNTRY = "de"
-DEFAULT_LANGUAGE = "de"
+DEFAULT_LANGUAGE = "en"
 CONF_LANGUAGE = "language"
 DEFAULT_OLA_INTERVAL = 10  # minutes
 
