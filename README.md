@@ -42,6 +42,7 @@ entity: sensor.terramar_vehicle
 name: Моя Cupra
 model: terramar        # auto | born | tavascan | raval | terramar | formentor | leon | leon_st | ateca
 powertrain: auto       # auto | ev | phev | ice
+image: /local/my_car.png   # своя картинка вместо силуэта
 show_actions: true
 ```
 
@@ -54,6 +55,8 @@ show_actions: true
 - **ДВС** — кольцо уровня топлива, на первом плане ТО и замена масла.
 
 От модели зависит силуэт сверху: хэтчбек (Born, Leon, Raval), универсал (Leon ST), кроссовер (Terramar, Ateca), купе-кроссовер (Formentor, Tavascan). Открытые двери, окна, люк, капот и багажник подсвечиваются на силуэте. По углам выводится давление в шинах, на месте лючка — значок подключённого кабеля.
+
+Вместо силуэта можно показать свою картинку. Положите файл в `/config/www/` (например, `/config/www/my_car.png`) и укажите `image: /local/my_car.png`, это же поле есть в визуальном редакторе. Подойдёт и ссылка `https://…`. Если картинка не загрузится, карточка покажет силуэт.
 
 Кнопки управления (замок, климат, зарядка, фары) видны только при работающем My Cupra. Кнопка «Обновить» есть всегда.
 

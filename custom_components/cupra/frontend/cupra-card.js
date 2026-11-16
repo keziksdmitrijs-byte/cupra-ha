@@ -3,7 +3,7 @@
  * Served by the "cupra" integration – no separate install needed.
  * Layout follows the powertrain (EV / PHEV / ICE), the outline follows the model.
  */
-const CARD_VERSION = "0.1.0";
+const CARD_VERSION = "0.2.0";
 
 const I18N = {
   en: {
@@ -89,6 +89,13 @@ const STYLE = `
   .hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 12px; align-items: center; margin-top: 10px; }
   .car { position: relative; display: flex; justify-content: center; }
   .car svg { width: 100%; max-width: 170px; height: auto; }
+  .hero.photo { grid-template-columns: 1fr; gap: 6px; }
+  .car.photo { flex-direction: column; align-items: center; }
+  .car.photo img { width: 100%; max-width: 460px; max-height: 220px; object-fit: contain; display: block; border-radius: 10px; }
+  .car.photo .fallback { display: none; }
+  .car.photo.broken img { display: none; }
+  .car.photo.broken .fallback { display: flex; justify-content: center; }
+  .hero.photo .energy { max-width: 460px; width: 100%; margin: 0 auto; }
   .energy { display: flex; flex-direction: column; gap: 12px; }
   .ring { position: relative; width: 100%; max-width: 170px; margin: 0 auto; }
   .ring svg { width: 100%; height: auto; display: block; }
@@ -209,8 +216,10 @@ class CupraCard extends HTMLElement {
           <div><div class="title">${this._esc(name)}</div><div class="sub">${this._esc(modelName)}${modelName ? " · " : ""}${this._ptLabel(pt)}</div></div>
           <div class="chip ${statusKey}"><ha-icon icon="${statusIcon}"></ha-icon>${this._t(statusKey)}</div>
         </div>
-        <div class="hero">
-          <div class="car">${this._carSvg(body, s, pt)}</div>
+        <div class="hero${cfg.image ? " photo" : ""}">
+          ${cfg.image
+            ? `<div class="car photo"><img src="${this._esc(cfg.image)}" alt="${this._esc(name)}"><div class="fallback">${this._carSvg(body, s, pt)}</div></div>`
+            : `<div class="car">${this._carSvg(body, s, pt)}</div>`}
           <div class="energy">${energy}</div>
         </div>
         ${this._openList(s)}
@@ -219,6 +228,8 @@ class CupraCard extends HTMLElement {
         ${warn ? `<div class="warnline"><ha-icon icon="mdi:alert-circle-outline"></ha-icon>${warn}</div>` : ""}
         <div class="foot"><span>${a.commands_available ? this._t("live") : this._t("readonly")}</span><span>${this._age(a.last_seen)}</span></div>
       </ha-card>`;
+    const img = root.querySelector(".car.photo img");
+    if (img) img.addEventListener("error", () => img.parentElement.classList.add("broken"));
     root.querySelectorAll("[data-act]").forEach((el) => el.addEventListener("click", (ev) => this._act(ev.currentTarget.dataset.act)));
     root.querySelectorAll("[data-more]").forEach((el) => el.addEventListener("click", (ev) => this._more(ev.currentTarget.dataset.more)));
   }
@@ -484,6 +495,7 @@ class CupraCardEditor extends HTMLElement {
           { name: "powertrain", selector: { select: { mode: "dropdown", options: [opt("auto", "Auto"), opt("ev", "EV"), opt("phev", "PHEV (e-HYBRID)"), opt("ice", "Petrol / diesel")] } } },
         ],
       },
+      { name: "image", selector: { text: {} } },
       { name: "show_actions", selector: { boolean: {} } },
     ];
   }
@@ -492,7 +504,7 @@ class CupraCardEditor extends HTMLElement {
     if (!this._hass || !this._config) return;
     if (!this._form) {
       this._form = document.createElement("ha-form");
-      this._form.computeLabel = (s) => ({ entity: "Vehicle", name: "Name", model: "Model", powertrain: "Powertrain", show_actions: "Show buttons" }[s.name] || s.name);
+      this._form.computeLabel = (s) => ({ entity: "Vehicle", name: "Name", model: "Model", powertrain: "Powertrain", show_actions: "Show buttons", image: "Own picture URL (e.g. /local/my_car.png)" }[s.name] || s.name);
       this._form.addEventListener("value-changed", (ev) => {
         this._config = ev.detail.value;
         this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config }, bubbles: true, composed: true }));

@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 DOMAIN = "cupra"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 USER_AGENT = f"HA-Cupra/{VERSION}"
 
 # --- EU Data Act portal ------------------------------------------------------
