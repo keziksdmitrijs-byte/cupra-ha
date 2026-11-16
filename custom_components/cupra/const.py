@@ -17,7 +17,9 @@ EUDA_SCOPE = "openid cars profile"
 EUDA_REDIRECT_URI = EUDA_BASE_URL + "/login"
 EUDA_VEHICLES_PATH = "/proxy_api/consent/me/vehicles?viewPosition=FRONT_LEFT"
 EUDA_RELATION_PATH = "/proxy_api/vum/v2/users/me/relations/{vin}"
-EUDA_METADATA_PATH = "/proxy_api/euda-apim/datarequest/vehicles/{vin}/metadata/partial"
+EUDA_METADATA_PATH = "/proxy_api/euda-apim/datarequest/vehicles/{vin}/metadata/{type}"
+# "partial" = customised (continuous) request, "all" = one-off "Get your data" file.
+EUDA_REQUEST_TYPES = ("partial", "all")
 EUDA_LIST_PATH = "/proxy_api/euda-apim/datadelivery/vehicles/{vin}/{identifier}/list"
 EUDA_DOWNLOAD_PATH = "/proxy_api/euda-apim/datadelivery/vehicles/{vin}/{identifier}/download"
 EUDA_NO_CONTENT_SUFFIX = "_no_content_found.zip"

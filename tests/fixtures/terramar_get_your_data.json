@@ -1,0 +1,12 @@
+{
+ "vin": "VSSZZZKMTEST00001",
+ "userId": "u",
+ "Data": [
+  {"key": "a7d18333-30ca-38e3-bf45-74d63352ceb3", "dataFieldName": "boardnetBatteryVoltageIndication", "timestampUtc": "2026-07-22 18:39:13"},
+  {"key": "c5b624db-6a07-3957-9127-98cee0be6c98", "dataFieldName": "boardnetBatteryVoltageIndication", "value": "13.3", "timestampUtc": "2026-11-14T14:20:08.123Z"},
+  {"key": "b871c390-5325-377d-a91f-ea09bc0eff92", "dataFieldName": "outsideTemperatureIndication", "value": "6", "timestampUtc": "2026-11-14T14:17:18.049Z"},
+  {"key": "b94a8f29-9457-3cf0-9582-fe9a22e4d761", "dataFieldName": "mileage_km", "value": "29950 km", "timestampUtc": "2026-11-10 08:00:00"},
+  {"key": "b94a8f29-9457-3cf0-9582-fe9a22e4d761", "dataFieldName": "mileage_km", "value": "30000 km", "timestampUtc": "2026-11-15 10:57:32"},
+  {"key": "ea58e713-ef44-3150-9303-edfc519dcdc1", "dataFieldName": "inspectionDistance", "value": "29000", "timestampUtc": "2026-11-14T14:20:07.692Z"}
+ ]
+}

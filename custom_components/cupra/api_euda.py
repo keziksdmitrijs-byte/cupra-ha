@@ -29,6 +29,7 @@ from .const import (
     EUDA_METADATA_PATH,
     EUDA_NO_CONTENT_SUFFIX,
     EUDA_REDIRECT_URI,
+    EUDA_REQUEST_TYPES,
     EUDA_RELATION_PATH,
     EUDA_SCOPE,
     EUDA_VEHICLES_PATH,
@@ -206,6 +207,8 @@ class EudaClient:
         self._country = (country or DEFAULT_COUNTRY).lower()
         self._language = (language or DEFAULT_LANGUAGE).lower()
         self._logged_in = False
+        # identifier -> request type ("partial" / "all")
+        self.request_types: dict[str, str] = {}
 
     # -- login ---------------------------------------------------------------
 
@@ -370,34 +373,54 @@ class EudaClient:
         return list(found.values())
 
     async def async_get_identifier(self, vin: str) -> str | None:
-        """Return the data request ``Identifier`` (None = no continuous request yet)."""
-        try:
-            meta = await self._json(EUDA_METADATA_PATH.format(vin=vin))
-        except CupraApiError as err:
-            if err.status in (400, 404):
-                return None
-            raise
-        return find_identifier(meta)
+        """Return the data request ``Identifier`` (None = no request on the portal).
+
+        A customised (continuous, ``partial``) request is preferred; a one-off
+        "Get your data" request (``all``) is used as a fallback.
+        """
+        for req_type in EUDA_REQUEST_TYPES:
+            try:
+                meta = await self._json(EUDA_METADATA_PATH.format(vin=vin, type=req_type))
+            except CupraApiError as err:
+                if err.status in (400, 404):
+                    continue
+                raise
+            ident = find_identifier(meta)
+            if ident:
+                self.request_types[ident] = req_type
+                return ident
+        return None
+
+    def request_type(self, identifier: str) -> str | None:
+        return self.request_types.get(identifier)
+
+    def _types_for(self, identifier: str) -> tuple[str, ...]:
+        known = self.request_types.get(identifier)
+        return (known,) if known else EUDA_REQUEST_TYPES
 
     async def async_list_datasets(self, vin: str, identifier: str) -> list[dict]:
-        status, text = await self._request(EUDA_LIST_PATH.format(vin=vin, identifier=identifier), {"type": "partial"})
-        if status == 404:
-            return []
-        if status >= 400:
-            raise CupraApiError(f"Dataset list -> HTTP {status}", status=status)
-        try:
-            data = json.loads(text)
-        except ValueError as err:
-            raise CupraApiError("Invalid dataset list") from err
-        files = data if isinstance(data, list) else data.get("files", [])
-        return [f for f in files if isinstance(f, dict) and f.get("name")]
+        for req_type in self._types_for(identifier):
+            status, text = await self._request(EUDA_LIST_PATH.format(vin=vin, identifier=identifier), {"type": req_type})
+            if status in (400, 404):
+                continue
+            if status >= 400:
+                raise CupraApiError(f"Dataset list -> HTTP {status}", status=status)
+            try:
+                data = json.loads(text)
+            except ValueError as err:
+                raise CupraApiError("Invalid dataset list") from err
+            self.request_types[identifier] = req_type
+            files = data if isinstance(data, list) else data.get("files", [])
+            return [f for f in files if isinstance(f, dict) and f.get("name")]
+        return []
 
     async def async_download(self, vin: str, identifier: str, name: str) -> dict:
         if name.endswith(EUDA_NO_CONTENT_SUFFIX):
             raise CupraApiError(f"{name} has no content")
+        req_type = self.request_types.get(identifier, EUDA_REQUEST_TYPES[0])
         status, body = await self._request(
             EUDA_DOWNLOAD_PATH.format(vin=vin, identifier=identifier),
-            {"filename": name, "type": "partial"},
+            {"filename": name, "type": req_type},
             raw=True,
         )
         if status >= 400:

@@ -41,6 +41,8 @@ def load_dictionary() -> dict[str, dict[str, str]]:
 _INT_RE = re.compile(r"^-?\d+$")
 _FLOAT_RE = re.compile(r"^-?\d+\.\d+$")
 _DUR_RE = re.compile(r"^(-?\d+(?:\.\d+)?)s$")
+# "30000 km", "13.3 V" – a number followed by a unit.
+_UNIT_RE = re.compile(r"^(-?\d+(?:[.,]\d+)?)\s*(?:km|mi|m|v|kw|kwh|%|°c|c|k|bar|kpa|l|min|h|d|days?)$", re.I)
 
 # "No reading" sentinels the portal sends instead of omitting a field.
 _SENTINELS = frozenset({2**16 - 1, 2**31 - 1, 2**32 - 2, 2**32 - 1})
@@ -65,6 +67,10 @@ def parse_value(raw: Any, type_hint: str = "") -> Any:
     m = _DUR_RE.match(s)
     if m:
         return float(m.group(1))
+    m = _UNIT_RE.match(s)
+    if m:
+        num = m.group(1).replace(",", ".")
+        return int(num) if _INT_RE.match(num) else float(num)
     return s
 
 
@@ -150,7 +156,7 @@ def parse_dataset(payload: dict) -> tuple[dict[str, FieldValue], datetime | None
         good = [(v, ts) for v, ts in slots if v is not None and not is_sentinel(v)]
         if not good:
             continue
-        if name in ("mileage", "mileage.value"):
+        if name in ("mileage", "mileage.value", "mileage_km"):
             v, ts = max(good, key=lambda s: s[0] if isinstance(s[0], (int, float)) else -1)
         else:
             v, ts = max(good, key=lambda s: s[1] or datetime.min.replace(tzinfo=UTC))
@@ -331,7 +337,7 @@ SPECS: tuple[Spec, ...] = (
     Spec("range_primary", _c(("cruising_range_primary_engine", _pos), ("estimatedcruisingrangeprimary.value", _pos),
                              ("value_of_the_primary_range", _pos), ("range.value", _pos), ("range", _pos))),
     Spec("range_secondary", _c(("cruising_range_secondary_engine", _pos), ("estimatedcruisingrangesecondary.value", _pos))),
-    Spec("mileage", _c(("mileage", _pos), ("mileage.value", _pos))),
+    Spec("mileage", _c(("mileage", _pos), ("mileage.value", _pos), ("mileage_km", _pos))),
     # --- charging ---------------------------------------------------------
     Spec("charging_state", _c(("charging_state", _str), ("charging_state_report.current_charge_state", _str),
                               ("Current Charge State", _str))),

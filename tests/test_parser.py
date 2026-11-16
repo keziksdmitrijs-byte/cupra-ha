@@ -87,3 +87,43 @@ def test_parse_value_and_timestamps():
     assert parser.parse_value("12.5") == 12.5
     assert parser.parse_value("300s") == 300.0
     assert parser.parse_timestamp("2026-06-12T16:53:49.000+02:00").hour == 14
+
+
+def test_get_your_data_file():
+    """One-off "Get your data" export: mostly value-less slots, units in values."""
+    import json
+    from pathlib import Path
+
+    from custom_components.cupra import parser as p
+
+    payload = json.loads((Path(__file__).parent / "fixtures" / "terramar_get_your_data.json").read_text())
+    fields, captured = p.parse_dataset(payload)
+    state = p.extract_state(fields)
+    assert state["mileage"] == 30000
+    assert state["battery_12v"] == 13.3
+    assert state["outside_temp"] == 6
+    assert state["inspection_km"] == 29000
+    assert captured is not None and captured.isoformat().startswith("2026-11-15T10:57:32")
+
+
+async def test_euda_falls_back_to_one_off_request():
+    """No customised request -> use the "Get your data" (type=all) request."""
+    from unittest.mock import AsyncMock
+
+    from custom_components.cupra.api_euda import CupraApiError, EudaClient
+
+    client = EudaClient(None, "a@b.lv", "pw")
+
+    async def fake_json(path, headers=None):
+        if path.endswith("/partial"):
+            raise CupraApiError("no request", status=404)
+        return {"Name": "Request File", "Identifier": "ALL-1"}
+
+    client._json = fake_json
+    assert await client.async_get_identifier("VIN") == "ALL-1"
+    assert client.request_type("ALL-1") == "all"
+
+    client._request = AsyncMock(return_value=(200, '[{"name": "f.zip", "createdOn": "2026-11-15T14:20:11Z"}]'))
+    files = await client.async_list_datasets("VIN", "ALL-1")
+    assert files[0]["name"] == "f.zip"
+    assert client._request.call_args.args[1] == {"type": "all"}

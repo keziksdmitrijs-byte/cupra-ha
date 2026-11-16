@@ -150,15 +150,18 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def _update_euda(self) -> None:
         try:
-            if not self.identifier:
-                self.identifier = await self.euda.async_get_identifier(self.vin)
-                if self.identifier:
+            # A one-off "Get your data" request is only a fallback: keep looking
+            # for a customised (continuous) request and switch to it once it exists.
+            if not self.identifier or self.euda.request_type(self.identifier) != "partial":
+                found = await self.euda.async_get_identifier(self.vin)
+                if found != self.identifier:  # None = the one-off request expired
+                    self.identifier = found
                     self._save()
             if not self.identifier:
                 self.euda_status = "no_subscription"
                 self._issue("no_subscription", True)
                 return
-            self._issue("no_subscription", False)
+            self._issue("no_subscription", self.euda.request_type(self.identifier) == "all")
             files = await self.euda.async_list_datasets(self.vin, self.identifier)
             if not files:
                 fresh = await self.euda.async_get_identifier(self.vin)
