@@ -127,3 +127,13 @@ async def test_euda_falls_back_to_one_off_request():
     files = await client.async_list_datasets("VIN", "ALL-1")
     assert files[0]["name"] == "f.zip"
     assert client._request.call_args.args[1] == {"type": "all"}
+
+
+def test_dataset_created_from_field_and_name():
+    from datetime import UTC, datetime
+
+    from custom_components.cupra.api_euda import dataset_created
+
+    assert dataset_created({"name": "x.zip", "createdOn": "2026-11-17T06:41:23Z"}) == datetime(2026, 11, 17, 6, 41, 23, tzinfo=UTC)
+    assert dataset_created({"name": "20261117064052_VSSZZZKP8T1005911.zip"}) == datetime(2026, 11, 17, 6, 40, 52, tzinfo=UTC)
+    assert dataset_created({"name": "odd.zip"}) is None

@@ -225,6 +225,23 @@
       },
       "trip_long_speed": {
         "name": "Долгосрочно: средняя скорость"
+      },
+      "euda_checked": {
+        "name": "Последняя проверка портала"
+      },
+      "dataset_created": {
+        "name": "Файл портала создан"
+      },
+      "euda_status": {
+        "name": "Статус EU Data Act",
+        "state": {
+          "starting": "Запуск",
+          "ok": "OK",
+          "waiting_for_data": "Ожидание данных",
+          "no_subscription": "Нет запроса данных",
+          "auth_failed": "Ошибка входа",
+          "error": "Ошибка"
+        }
       }
     },
     "binary_sensor": {

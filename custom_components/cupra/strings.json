@@ -225,6 +225,23 @@
       },
       "trip_long_speed": {
         "name": "Long-term average speed"
+      },
+      "euda_checked": {
+        "name": "Portal last checked"
+      },
+      "dataset_created": {
+        "name": "Portal file generated"
+      },
+      "euda_status": {
+        "name": "EU Data Act status",
+        "state": {
+          "starting": "Starting",
+          "ok": "OK",
+          "waiting_for_data": "Waiting for data",
+          "no_subscription": "No data request",
+          "auth_failed": "Login failed",
+          "error": "Error"
+        }
       }
     },
     "binary_sensor": {

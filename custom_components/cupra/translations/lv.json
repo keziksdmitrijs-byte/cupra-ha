@@ -225,6 +225,23 @@
       },
       "trip_long_speed": {
         "name": "Ilgtermiņa vidējais ātrums"
+      },
+      "euda_checked": {
+        "name": "Pēdējā portāla pārbaude"
+      },
+      "dataset_created": {
+        "name": "Portāla fails izveidots"
+      },
+      "euda_status": {
+        "name": "EU Data Act statuss",
+        "state": {
+          "starting": "Startē",
+          "ok": "OK",
+          "waiting_for_data": "Gaida datus",
+          "no_subscription": "Nav datu pieprasījuma",
+          "auth_failed": "Pieteikšanās kļūda",
+          "error": "Kļūda"
+        }
       }
     },
     "binary_sensor": {

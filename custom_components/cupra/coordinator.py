@@ -17,7 +17,7 @@ from homeassistant.helpers.storage import Store
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from . import parser
-from .api_euda import CupraApiError, CupraAuthError, EudaClient, newest_dataset
+from .api_euda import CupraApiError, CupraAuthError, EudaClient, dataset_created, newest_dataset
 from .api_ola import OlaBlockedError, OlaClient, OlaThrottledError
 from .const import (
     CONF_APPCHECK,
@@ -101,6 +101,8 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.captured_at: datetime | None = None
         self.euda_status = "starting"
         self.euda_error: str | None = None
+        self.euda_checked: datetime | None = None
+        self.dataset_created: datetime | None = None
         self.ola_raw: dict[str, Any] = {}
         self.ola_status = "disabled" if not self.use_ola else "starting"
         self.ola_error: str | None = None
@@ -117,6 +119,7 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.last_dataset = stored.get("last_dataset")
         self.identifier = self.identifier or stored.get("identifier")
         self.captured_at = parser.parse_timestamp(stored.get("captured_at"))
+        self.dataset_created = parser.parse_timestamp(stored.get("dataset_created"))
         if stored.get("ola"):
             self.ola_raw = stored["ola"]
         if self.ola and stored.get("ola_tokens"):
@@ -130,6 +133,7 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "last_dataset": self.last_dataset,
                 "identifier": self.identifier,
                 "captured_at": self.captured_at.isoformat() if self.captured_at else None,
+                "dataset_created": self.dataset_created.isoformat() if self.dataset_created else None,
                 "ola": self.ola_raw,
                 "ola_tokens": self.ola.tokens if self.ola else None,
             }
@@ -169,10 +173,14 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     self.identifier = fresh
                     self._save()
                     files = await self.euda.async_list_datasets(self.vin, fresh)
+            self.euda_checked = _now()
             newest = newest_dataset(files)
             if newest is None:
-                self.euda_status = "waiting_for_data"
+                self._set_euda_status("waiting_for_data")
                 return
+            created = dataset_created(newest)
+            if created and (self.dataset_created is None or created > self.dataset_created):
+                self.dataset_created = created
             if newest["name"] != self.last_dataset:
                 payload = await self.euda.async_download(self.vin, self.identifier, newest["name"])
                 new_fields, captured = parser.parse_dataset(payload)
@@ -180,17 +188,24 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 self.last_dataset = newest["name"]
                 if captured and (self.captured_at is None or captured > self.captured_at):
                     self.captured_at = captured
-                self._save()
-            self.euda_status = "ok"
-            self.euda_error = None
+            self._save()
+            self._set_euda_status("ok")
         except CupraAuthError as err:
-            self.euda_status = "auth_failed"
-            self.euda_error = str(err)
-            _LOGGER.warning("EU Data Act login failed: %s", err)
+            self._set_euda_status("auth_failed", str(err))
         except CupraApiError as err:
-            self.euda_status = "error"
-            self.euda_error = str(err)
-            _LOGGER.debug("EU Data Act update failed: %s", err)
+            self._set_euda_status("error", str(err))
+
+    def _set_euda_status(self, status: str, error: str | None = None) -> None:
+        """Log a problem once when it appears (warning) and once when it clears."""
+        changed = status != self.euda_status or error != self.euda_error
+        if changed and error:
+            _LOGGER.warning("EU Data Act %s: %s", "login failed" if status == "auth_failed" else "update failed", error)
+        elif changed and self.euda_error and not error:
+            _LOGGER.info("EU Data Act is working again (%s)", status)
+        elif error:
+            _LOGGER.debug("EU Data Act still failing: %s", error)
+        self.euda_status = status
+        self.euda_error = error
 
     async def _update_ola(self) -> None:
         assert self.ola is not None
@@ -277,7 +292,10 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "error": self.euda_error,
                 "dataset": self.last_dataset,
                 "captured_at": self.captured_at,
+                "dataset_created": self.dataset_created,
+                "checked": self.euda_checked,
                 "field_count": len(self.fields),
+                "fields": sorted(self.fields),
             },
             "ola": {
                 "status": self.ola_status,

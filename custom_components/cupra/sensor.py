@@ -83,7 +83,13 @@ _BY_KEY = {d.key: d for d in SENSORS}
 
 async def async_setup_entry(hass: HomeAssistant, entry: CupraConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
     coordinator = entry.runtime_data
-    async_add_entities([CupraVehicleSensor(coordinator), CupraLastSeenSensor(coordinator)])
+    async_add_entities([
+        CupraVehicleSensor(coordinator),
+        CupraLastSeenSensor(coordinator),
+        CupraEudaTimeSensor(coordinator, "euda_checked", "checked"),
+        CupraEudaTimeSensor(coordinator, "dataset_created", "dataset_created"),
+        CupraEudaStatusSensor(coordinator),
+    ])
 
     def factory(created: set[str]):
         state = (coordinator.data or {}).get("state", {})
@@ -114,6 +120,48 @@ class CupraLastSeenSensor(CupraEntity, SensorEntity):
     @property
     def native_value(self) -> datetime | None:
         return (self.coordinator.data or {}).get("last_seen")
+
+
+class CupraEudaTimeSensor(CupraEntity, SensorEntity):
+    """When the portal was last checked / when its newest file was generated."""
+
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(self, coordinator: CupraCoordinator, key: str, field: str) -> None:
+        super().__init__(coordinator, key)
+        self._field = field
+
+    @property
+    def native_value(self) -> datetime | None:
+        return (self.coordinator.data or {}).get("euda", {}).get(self._field)
+
+
+class CupraEudaStatusSensor(CupraEntity, SensorEntity):
+    """EU Data Act connection state, with the last error and the delivered fields."""
+
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:cloud-check-outline"
+    _attr_options = ["starting", "ok", "waiting_for_data", "no_subscription", "auth_failed", "error"]
+
+    def __init__(self, coordinator: CupraCoordinator) -> None:
+        super().__init__(coordinator, "euda_status")
+
+    @property
+    def native_value(self) -> str | None:
+        status = (self.coordinator.data or {}).get("euda", {}).get("status")
+        return status if status in self._attr_options else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        euda = (self.coordinator.data or {}).get("euda", {})
+        return {
+            "error": euda.get("error"),
+            "dataset": euda.get("dataset"),
+            "field_count": euda.get("field_count"),
+            "fields": euda.get("fields"),
+        }
 
 
 class CupraVehicleSensor(CupraEntity, SensorEntity):

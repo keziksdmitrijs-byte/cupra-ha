@@ -12,6 +12,7 @@ import logging
 import re
 import uuid
 import zipfile
+from datetime import UTC, datetime
 from html.parser import HTMLParser
 from typing import Any
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse, urlunparse
@@ -465,3 +466,25 @@ def newest_dataset(files: list[dict]) -> dict | None:
     if not real:
         return None
     return max(real, key=lambda f: (str(f.get("createdOn") or ""), str(f.get("name"))))
+
+
+_NAME_TS_RE = re.compile(r"^(\d{14})_")
+
+
+def dataset_created(file: dict) -> datetime | None:
+    """When the portal generated a dataset: ``createdOn``, else the name prefix (UTC)."""
+    raw = file.get("createdOn")
+    if isinstance(raw, str):
+        ts = raw.strip().replace("Z", "+00:00")
+        try:
+            dt = datetime.fromisoformat(ts)
+            return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
+        except ValueError:
+            pass
+    m = _NAME_TS_RE.match(str(file.get("name") or ""))
+    if m:
+        try:
+            return datetime.strptime(m.group(1), "%Y%m%d%H%M%S").replace(tzinfo=UTC)
+        except ValueError:
+            return None
+    return None
