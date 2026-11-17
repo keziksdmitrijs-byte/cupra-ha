@@ -26,7 +26,7 @@
 
 ### Подписка на портале EU Data Act (обязательно, один раз)
 
-1. Откройте https://eu-data-act.drivesomethinggreater.com и выберите **CUPRA**.
+1. Откройте https://eu-data-act.vwgroup-datahub.com и выберите **CUPRA**.
 2. Войдите с CUPRA ID и выберите автомобиль.
 3. Создайте **непрерывный (continuous)** запрос данных с интервалом 15 минут.
 4. Подождите: первые файлы приходят от нескольких минут до 1–3 дней. Пока данных нет, в «Ремонтах» висит подсказка, а карточка пишет «Ждём первый снимок».
@@ -93,7 +93,7 @@ show_actions: true
 
 Home Assistant integration + Lovelace card for **CUPRA** cars (EV, e-HYBRID and petrol/diesel).
 
-- **Main data source:** the official **VW Group EU Data Act** portal (read-only, a snapshot every ~15 min). You must create a *continuous* data request once at https://eu-data-act.drivesomethinggreater.com (choose CUPRA).
+- **Main data source:** the official **VW Group EU Data Act** portal (read-only, a snapshot every ~15 min). You must create a *continuous* data request once at https://eu-data-act.vwgroup-datahub.com (choose CUPRA).
 - **Optional:** the My Cupra app API for GPS and remote commands. Since 8 June 2026 VW requires a Firebase App Check token there. Without it the API returns 403, so the integration switches commands off and raises a Repairs issue instead of failing.
 - Install through HACS as a custom repository (type *Integration*). The card (`custom:cupra-card`) is bundled and registered automatically. Its layout follows the powertrain, and the car outline follows the model.
 - Translations: English, Russian, Latvian.

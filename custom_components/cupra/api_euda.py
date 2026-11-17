@@ -22,6 +22,7 @@ from .const import (
     DEFAULT_COUNTRY,
     DEFAULT_LANGUAGE,
     EUDA_BASE_URL,
+    EUDA_HOSTS,
     EUDA_CALLBACK_PATH,
     EUDA_CLIENT_ID,
     EUDA_DOWNLOAD_PATH,
@@ -170,7 +171,7 @@ def marketing_skip(url: str) -> tuple[str, str, dict[str, str] | None] | None:
         if not cb:
             raise CupraAuthError("Marketing consent page without continuation")
         target = urlparse(urljoin(url, cb))
-        if target.netloc not in {urlparse(EUDA_BASE_URL).netloc, urlparse(IDENTITY_BASE).netloc}:
+        if target.netloc not in EUDA_HOSTS | {urlparse(IDENTITY_BASE).netloc}:
             raise CupraAuthError("Unexpected marketing consent continuation host")
         return "GET", urlunparse(target), None
     path = p.path.rstrip("/")
@@ -229,7 +230,7 @@ class EudaClient:
     @staticmethod
     def _is_callback(url: str) -> bool:
         p = urlparse(url)
-        return p.netloc == urlparse(EUDA_BASE_URL).netloc and p.path.startswith(EUDA_CALLBACK_PATH)
+        return p.netloc in EUDA_HOSTS and p.path.startswith(EUDA_CALLBACK_PATH)
 
     async def _follow(self, resp: aiohttp.ClientResponse) -> aiohttp.ClientResponse:
         for _ in range(_MAX_REDIRECTS):

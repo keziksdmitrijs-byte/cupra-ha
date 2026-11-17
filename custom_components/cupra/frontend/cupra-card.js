@@ -3,7 +3,7 @@
  * Served by the "cupra" integration – no separate install needed.
  * Layout follows the powertrain (EV / PHEV / ICE), the outline follows the model.
  */
-const CARD_VERSION = "0.2.0";
+const CARD_VERSION = "0.2.1";
 
 const I18N = {
   en: {

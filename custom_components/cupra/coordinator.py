@@ -229,7 +229,7 @@ class CupraCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 severity=ir.IssueSeverity.WARNING,
                 translation_key=key,
                 translation_placeholders={"vehicle": self.title, "vin": self.vin[-6:]},
-                learn_more_url="https://eu-data-act.drivesomethinggreater.com",
+                learn_more_url="https://eu-data-act.vwgroup-datahub.com",
             )
         else:
             ir.async_delete_issue(self.hass, DOMAIN, issue_id)

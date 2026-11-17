@@ -4,11 +4,14 @@ from __future__ import annotations
 from datetime import timedelta
 
 DOMAIN = "cupra"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 USER_AGENT = f"HA-Cupra/{VERSION}"
 
 # --- EU Data Act portal ------------------------------------------------------
-EUDA_BASE_URL = "https://eu-data-act.drivesomethinggreater.com"
+# The portal moved from eu-data-act.drivesomethinggreater.com (Nov 2026); the old
+# host only redirects now, so its cookies/callback no longer match.
+EUDA_BASE_URL = "https://eu-data-act.vwgroup-datahub.com"
+EUDA_HOSTS = frozenset({"eu-data-act.vwgroup-datahub.com", "eu-data-act.drivesomethinggreater.com"})
 IDENTITY_BASE = "https://identity.vwgroup.io"
 EUDA_CALLBACK_PATH = "/services/callbacklogin"
 OIDC_AUTHORIZE_URL = IDENTITY_BASE + "/oidc/v1/authorize"

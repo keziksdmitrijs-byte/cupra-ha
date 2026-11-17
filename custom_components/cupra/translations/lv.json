@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Pievienot Cupra",
-        "description": "Piesakieties ar **CUPRA ID** (tas pats e-pasts un parole kā lietotnē My Cupra).\n\nDati nāk no oficiālā **VW Group EU Data Act** portāla. Lai dati sāktu nākt, atveriet https://eu-data-act.drivesomethinggreater.com, izvēlieties CUPRA, piesakieties, izvēlieties auto un izveidojiet **nepārtrauktu** datu pieprasījumu (ik 15 minūtes). Pirmie faili var pienākt no dažām minūtēm līdz 1–3 dienām.",
+        "description": "Piesakieties ar **CUPRA ID** (tas pats e-pasts un parole kā lietotnē My Cupra).\n\nDati nāk no oficiālā **VW Group EU Data Act** portāla. Lai dati sāktu nākt, atveriet https://eu-data-act.vwgroup-datahub.com, izvēlieties CUPRA, piesakieties, izvēlieties auto un izveidojiet **nepārtrauktu** datu pieprasījumu (ik 15 minūtes). Pirmie faili var pienākt no dažām minūtēm līdz 1–3 dienām.",
         "data": {
           "email": "E-pasts (CUPRA ID)",
           "password": "Parole",
@@ -109,7 +109,7 @@
   "issues": {
     "no_subscription": {
       "title": "{vehicle}: nav EU Data Act datu pieprasījuma",
-      "description": "Portālā nav nepārtraukta datu pieprasījuma auto …{vin}. Atveriet https://eu-data-act.drivesomethinggreater.com, izvēlieties CUPRA, auto un izveidojiet nepārtrauktu pieprasījumu (ik 15 minūtes). Integrācija to paņems automātiski."
+      "description": "Portālā nav nepārtraukta datu pieprasījuma auto …{vin}. Atveriet https://eu-data-act.vwgroup-datahub.com, izvēlieties CUPRA, auto un izveidojiet nepārtrauktu pieprasījumu (ik 15 minūtes). Integrācija to paņems automātiski."
     },
     "ola_blocked": {
       "title": "{vehicle}: My Cupra API bloķēts",
